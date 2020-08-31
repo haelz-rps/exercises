@@ -1,0 +1,16 @@
+{
+  "clusterName": "Teste_Cluster",
+  "groupName": "Users",
+  "groupOwnerId": "1",
+  "publicIp": "10.0.90.34",
+  "mangueIp": "10.0.90.34",
+  "dashboardPort": "",
+  "faasToken": "",
+  "ucloudIp": "",
+  "metricsToken": "",
+  "k8sVersion": "1.17",
+  "kubernetesApiPort": "6443",
+  "kubernetesType": 0,
+  "kubernetesWorkerIp": "",
+  "kubeConfig": ""
+}

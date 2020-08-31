@@ -1,0 +1,112 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: umarket-ui
+  name: umarket-ui
+  namespace: ustore
+spec:
+  ports:
+  - nodePort: 31440
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: umarket
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: umarket-server
+  name: umarket-server
+  namespace: ustore
+spec:
+  ports:
+  - nodePort: 31441
+    port: 9091
+    protocol: TCP
+    targetPort: 9091
+  selector:
+    app: umarket
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: umarket
+  name: umarket
+  namespace: ustore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: umarket
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: umarket
+    spec:
+      containers:
+      - image: magueio/umarket-ui:tlmx-v1.20
+        imagePullPolicy: Always
+        name: umarket-ui
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 250m
+            memory: 200Mi
+          requests:
+            cpu: 150m
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html/assets/apis
+          name: umarket-config
+      - env:
+        - name: MYSQL_IP
+          value: 10.0.30.20
+        - name: AMBIENTE
+          value: prod
+        - name: MANGUE_SERVER_PORT
+          value: "9090"
+        - name: MANGUE_IP
+          value: mangue-cluster
+        - name: BILLING_IP
+          value: "10.0.30.20"
+        - name: BILLING_PORT
+          value: "30995"
+        - name: UCLOUD_HOST
+          value: "10.0.40.25"
+        - name: UCLOUD_NAME
+          value: mangueadmin
+        - name: GROUP_NAME
+          value: Users
+        - name: GROUP_ID
+          value: "1"
+        image: magueio/umarket-server:tlmx-v1.12
+        imagePullPolicy: Always
+        name: umarket-server
+        ports:
+        - containerPort: 9091
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 350m
+            memory: 200Mi
+          requests:
+            cpu: 150m
+            memory: 100Mi
+      volumes:
+      - name: umarket-config
+        configMap:
+          name: umarket-config

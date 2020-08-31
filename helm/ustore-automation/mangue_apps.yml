@@ -1,0 +1,213 @@
+# Mangue-Cluster
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mangue-cluster
+  labels:
+    app: mangue-cluster
+spec:
+  ports:
+    - name: http
+      port: 8893
+  selector:
+    app: mangue-cluster
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mangue-cluster
+  labels:
+    app: mangue-cluster
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mangue-cluster
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: mangue-cluster
+    spec:
+      containers:
+      - name: container0
+        ports:
+        - containerPort: 8893
+        image: magueio/clustermanager:tlmx-v1.1.0
+        env:
+        - name: CLUSTER_IP
+          value: 10.0.30.20
+        - name: MYSQL_PORT
+          value: "3306"
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 400m
+            memory: 600Mi
+          requests:
+            cpu: 200m
+            memory: 400Mi
+        readinessProbe:
+          httpGet:
+            path: "/api/health-check"
+            port: 8893
+            scheme: HTTP
+          timeoutSeconds: 2
+          periodSeconds: 10
+          initialDelaySeconds: 20
+          successThreshold: 1
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: "/api/health-check"
+            port: 8893
+            scheme: HTTP
+          periodSeconds: 10
+          initialDelaySeconds: 20
+---
+# Mangue-Server
+apiVersion: v1
+kind: Service
+metadata:
+  name: mangue-server
+  labels:
+    app: mangue-server
+spec:
+  ports:
+    - name: http
+      port: 9090
+  selector:
+    app: mangue-server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mangue-server-external
+  labels:
+    app: mangue-server-external
+spec:
+  ports:
+    - name: http
+      port: 9090
+      nodePort: 32588
+  selector:
+    app: mangue-server
+  type: NodePort
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mangue-server
+  labels:
+    app: mangue-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mangue-server
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: mangue-server
+    spec:
+      containers:
+      - name: container0
+        ports:
+        - containerPort: 9090
+        image: magueio/mangueio-server:tlmx-v1.1.0
+        env:
+        - name: CLUSTER_IP
+          value: "mangue-cluster-server"
+        - name: MANAGER_PORT
+          value: "8893"
+        - name: UCLOUD_HOST
+          value: "10.0.40.25"
+        - name: UCLOUD_REQUEST
+          value: "https"
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 400m
+            memory: 600Mi
+          requests:
+            cpu: 200m
+            memory: 400Mi
+        readinessProbe:
+          httpGet:
+            path: "/api/kube//health-check"
+            port: 9090
+            scheme: HTTP
+          timeoutSeconds: 2
+          periodSeconds: 10
+          initialDelaySeconds: 20
+          successThreshold: 1
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: "/api/kube//health-check"
+            port: 9090
+            scheme: HTTP
+          periodSeconds: 10
+          initialDelaySeconds: 20
+---
+# Mangue-UI
+apiVersion: v1
+kind: Service
+metadata:
+  name: mangueuiv2
+  labels:
+    app: mangueuiv2
+spec:
+  ports:
+    - port: 80
+      nodePort: 31445
+  selector:
+    app: mangueuiv2
+  type: NodePort
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mangueuiv2
+  creationTimestamp:
+  labels:
+    app: mangueuiv2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mangueuiv2
+  template:
+    metadata:
+      creationTimestamp:
+      labels:
+        app: mangueuiv2
+    spec:
+      containers:
+      - name: mangueuiv2
+        image: magueio/mangueuiv2:tlmx-v1.1.0
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 250m
+            memory: 200Mi
+          requests:
+            cpu: 150m
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html/assets/apis
+          name: mangueui-config
+      volumes:
+      - configMap:
+          name: mangueui-config
+        name: mangueui-config

@@ -1,0 +1,38 @@
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: mangueadmin-crb
+subjects:
+- kind: ServiceAccount
+  name: mangueadmin
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  name: mangueadmin-cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mangueadmin
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    rbac.authorization.kubernetes.io/autoupdate: "true"
+  creationTimestamp: null
+  labels:
+    kubernetes.io/bootstrapping: rbac-defaults
+  name: mangueadmin-cluster-admin
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- nonResourceURLs:
+  - '*'
+  verbs:
+  - '*'

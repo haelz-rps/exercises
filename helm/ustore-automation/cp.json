@@ -1,0 +1,26 @@
+{
+  "cluster": {
+    "clusterName": "Teste_Cluster",
+    "groupName": "Users",
+    "groupOwnerId": "1",
+    "publicIp": "10.0.90.34",
+    "mangueIp": "10.0.90.34",
+    "dashboardPort": "",
+    "faasToken": "",
+    "ucloudIp": "",
+    "metricsToken": "",
+    "k8sVersion": "1.17",
+    "kubernetesApiPort": "6443",
+    "kubernetesType": 0,
+    "kubernetesWorkerIp": "",
+    "kubeConfig": ""
+  },
+  "permission": {
+    "ucname": "mangueadmin",
+    "role": "cluster-admin",
+    "clusterRoleName": "mangueadmin-cluster-admin",
+    "clusterRoleBindingName": "mangueadmin-crb",
+    "serviceAccountName": "mangueadmin",
+    "bearerToken": "ZXlKaGJHY2lPaUpTVXpJMU5pSXNJbXRwWkNJNkluVlJXbUZDVUcxc1dIcDRUbGsyYVRobGMySjRSbTUwZWxoc1IycGhTVmR0YmxKd0xWWTJkblZvWW5jaWZRLmV5SnBjM01pT2lKcmRXSmxjbTVsZEdWekwzTmxjblpwWTJWaFkyTnZkVzUwSWl3aWEzVmlaWEp1WlhSbGN5NXBieTl6WlhKMmFXTmxZV05qYjNWdWRDOXVZVzFsYzNCaFkyVWlPaUprWldaaGRXeDBJaXdpYTNWaVpYSnVaWFJsY3k1cGJ5OXpaWEoyYVdObFlXTmpiM1Z1ZEM5elpXTnlaWFF1Ym1GdFpTSTZJbTFoYm1kMVpXRmtiV2x1TFhSdmEyVnVMVEprZEdaeklpd2lhM1ZpWlhKdVpYUmxjeTVwYnk5elpYSjJhV05sWVdOamIzVnVkQzl6WlhKMmFXTmxMV0ZqWTI5MWJuUXVibUZ0WlNJNkltMWhibWQxWldGa2JXbHVJaXdpYTNWaVpYSnVaWFJsY3k1cGJ5OXpaWEoyYVdObFlXTmpiM1Z1ZEM5elpYSjJhV05sTFdGalkyOTFiblF1ZFdsa0lqb2lNMkU1TVdKbVpUa3ROamcyTXkwMFlUTmpMVGd4Tm1JdE1HSmpOVFUyTjJJeE1XVTVJaXdpYzNWaUlqb2ljM2x6ZEdWdE9uTmxjblpwWTJWaFkyTnZkVzUwT21SbFptRjFiSFE2YldGdVozVmxZV1J0YVc0aWZRLlJNOEdkVklSM29WTUpjSk9Bc21aQW9lNVlnanMzV05Nb2dqVlR5YWVra19Ca1hZdlhhN3YxeHhrLXg3NDc2WlVLUzBmZkEzQ3MxLWliVkl1T3dobGZSczNGS2RCZ05lWF96Qy1FV19MQnhMWlUxNzkyZ3FPYjN6WDBmQzZSaWlTUE56VkxvYWVNVHN0eUpPMnB5RmM3RUlkWExyYjFDbnZOMFNfLUlUZlBnQTF1S2NMdm9PLVlYZnU0MGNzTHE5ZHpMTlpwNXExZ010dmFYUkhVcDRBVGhuUUw1SWlDN3l1NTBFTW5YUkk4QXhSaldrMElNY2sxNFpqUV9lcXJKQ0UtRHJqWUxHU25lVkZnZ2plVkg5a0VEVXlZNE1uX1ZyVEhPcFU2Z1FFNFJkZUZaZGlpT00tTEFZZEZmVWNQU19PRThTSTdRMktlcTRuTWZndVdhbFVYQQ=="
+  }
+}

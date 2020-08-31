@@ -1,0 +1,53 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mangueuiv2
+  labels:
+    app: mangueuiv2
+spec:
+  ports:
+    - port: 80
+      nodePort: 31445
+  selector:
+    app: mangueuiv2
+  type: NodePort
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mangueuiv2
+  creationTimestamp: 
+  labels:
+    app: mangueuiv2
+    user: mangue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mangueuiv2
+  template:
+    metadata:
+      creationTimestamp: 
+      labels:
+        app: mangueuiv2
+    spec:
+      containers:
+      - name: mangueuiv2
+        image: magueio/mangueuiv2:cfg-j-v1.1
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 250m
+            memory: 200Mi
+          requests:
+            cpu: 150m
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html/assets/apis
+          name: mangueui-config
+      volumes:
+      - configMap:
+          name: mangueui-config
+        name: mangueui-config
+

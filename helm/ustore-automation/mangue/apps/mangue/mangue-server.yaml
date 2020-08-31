@@ -1,0 +1,76 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mangue-server
+  labels:
+    app: mangue-server
+spec:
+  ports:
+    - name: http
+      port: 9090
+      nodePort: 32588
+  selector:
+    app: mangue-server
+  type: NodePort
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mangue-server
+  labels:
+    app: mangue-server
+    group: mangue-io
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mangue-server
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: mangue-server
+    spec:
+      containers:
+      - name: container0
+        ports:
+        - containerPort: 9090
+        image: magueio/mangueio-server:resource-parent
+        env:
+        - name: RABBITMQ_PORT
+          value: "30672"
+        - name: CLUSTER_IP
+          value: "100.30.20"
+        - name: MANAGER_PORT
+          value: "32580"
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 200m
+            memory: 400Mi
+          requests:
+            cpu: 200m
+            memory: 400Mi
+        readinessProbe:
+          httpGet:
+            path: "/"
+            port: 9090
+            scheme: HTTP
+          timeoutSeconds: 2
+          periodSeconds: 10
+          initialDelaySeconds: 20
+          successThreshold: 1
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: "/"
+            port: 9090
+            scheme: HTTP
+          periodSeconds: 10
+          initialDelaySeconds: 20
+

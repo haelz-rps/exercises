@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mangueui-config
+data:
+    config.json: |
+        {
+         "MARKET_URL": "http://10.0.90.34:32582/api/",
+         "SERVER_URL": "http://10.0.90.34:32588/api/",
+         "BILLING_URL": "http://10.0.90.34:30995/"
+        }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: umarket-config
+data:
+    config.json: |
+        {
+         "SERVER_URL": "http://10.0.90.34:31441/api/",
+         "BILLING_URL": "http://10.0.90.34:30995/",
+         "MANGUE_SERVER_URL": "http://10.0.90.34:32588/api/"
+        }

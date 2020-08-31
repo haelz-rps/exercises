@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mangue-billing
+  labels:
+    app: mangue-billing
+spec:
+  ports:
+    - name: http
+      port: 9090
+      nodePort: 30995
+  selector:
+    app: mangue-billing
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mangue-billing
+  name: mangue-billing
+spec:
+  selector:
+    matchLabels:
+      app: mangue-billing
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mangue-billing
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_IP
+          value: 10.0.30.20
+        - name: MYSQL_PORT
+          value: "3306"
+        - name: MANGUE_SERVER
+          value: "mangue-cluster"
+        - name: MANGUE_SERVER_PORT
+          value: "9090"
+        image: magueio/billing-server:tlmx-v1.1.0
+        imagePullPolicy: Always
+        name: container0
+        ports:
+        - containerPort: 9097
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 180m
+            memory: 600Mi
+          requests:
+            cpu: 100m
+            memory: 256Mi
+        readinessProbe:
+          httpGet:
+            path: "/api/billing/health-check"
+            port: 9097
+            scheme: HTTP
+          timeoutSeconds: 2
+          periodSeconds: 10
+          initialDelaySeconds: 20
+          successThreshold: 1
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: "/api/billing/health-check"
+            port: 9097
+            scheme: HTTP
+          periodSeconds: 10
+          initialDelaySeconds: 20
